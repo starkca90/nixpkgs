@@ -7,19 +7,19 @@
 }:
 let
   pname = "open-webui";
-  version = "0.3.10";
+  version = "0.3.16";
 
   src = fetchFromGitHub {
     owner = "open-webui";
     repo = "open-webui";
     rev = "v${version}";
-    hash = "sha256-Q8ZUc3fNfWeijPLUtgwkU2rv7SWSfi7Q1QOlt14O3nE=                 ";
+    hash = "sha256-AxD7WHL5fGM0CBKi7zc/gmoSJQBohDh0HgIDU1/BQ7w=";
   };
 
   frontend = buildNpmPackage {
     inherit pname version src;
 
-    npmDepsHash = "sha256-nkJksj1FAOMqEDQS1k++E2izv9TT3PkoZLxzHIcHzvA=";
+    npmDepsHash = "sha256-Ik+wXymso3jdKXQgLydnhhWvpHl0d82pwYSmUR0yfPE=";
 
     # Disabling `pyodide:fetch` as it downloads packages during `buildPhase`
     # Until this is solved, running python packages from the browser will not work.
@@ -59,6 +59,9 @@ python3.pkgs.buildPythonApplication rec {
     "opencv-python-headless"
     # using `psycopg2` instead
     "psycopg2-binary"
+    "docker"
+    "pytest"
+    "pytest-docker"
   ];
 
   dependencies = with python3.pkgs; [
@@ -88,6 +91,7 @@ python3.pkgs.buildPythonApplication rec {
     langchain-community
     langfuse
     markdown
+    nltk
     openai
     opencv4
     openpyxl
@@ -103,6 +107,7 @@ python3.pkgs.buildPythonApplication rec {
     pymysql
     pypandoc
     pypdf
+    python-dotenv
     python-jose
     python-multipart
     python-pptx
@@ -114,7 +119,6 @@ python3.pkgs.buildPythonApplication rec {
     redis
     requests
     sentence-transformers
-    sqlalchemy
     tiktoken
     unstructured
     uvicorn
@@ -124,7 +128,6 @@ python3.pkgs.buildPythonApplication rec {
   ];
 
   build-system = with python3.pkgs; [ hatchling ];
-
 
   pythonImportsCheck = [ "open_webui" ];
 

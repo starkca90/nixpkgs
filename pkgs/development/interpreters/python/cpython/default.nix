@@ -135,7 +135,7 @@ let
   in passthruFun rec {
     inherit self sourceVersion packageOverrides;
     implementation = "cpython";
-    libPrefix = "python${pythonVersion}";
+    libPrefix = "python${pythonVersion}${lib.optionalString (!enableGIL) "t"}";
     executable = libPrefix;
     pythonVersion = with sourceVersion; "${major}.${minor}";
     sitePackages = "lib/${libPrefix}/site-packages";
@@ -455,6 +455,10 @@ in with passthru; stdenv.mkDerivation (finalAttrs: {
     "ac_cv_func_lchmod=no"
   ] ++ optionals static [
     "LDFLAGS=-static"
+    "MODULE_BUILDTYPE=static"
+  ] ++ optionals (stdenv.hostPlatform.isStatic && stdenv.hostPlatform.isMusl) [
+    # dlopen is a no-op in static musl builds, and since we build everything without -fPIC it's better not to pretend.
+    "ac_cv_func_dlopen=no"
   ];
 
   preConfigure = ''

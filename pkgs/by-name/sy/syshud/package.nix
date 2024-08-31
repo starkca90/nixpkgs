@@ -12,13 +12,13 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "syshud";
-  version = "0-unstable-2024-07-16";
+  version = "0-unstable-2024-08-24";
 
   src = fetchFromGitHub {
     owner = "System64fumo";
     repo = "syshud";
-    rev = "d60c3bb6c8eefba743478fe7c183055fa057e69e";
-    hash = "sha256-2aVqCXUZYGtv6xIqbZ1yk3SZK45igZVgPl0byxTXu8E=";
+    rev = "93f94c866b0ed6326ec7cc6da04221e1feaafeef";
+    hash = "sha256-+l7WDDrdKiFZAGrtARC86hDrNML8BMYIw0Z4yg/bKsU=";
   };
 
   postPatch = ''
@@ -39,6 +39,7 @@ stdenv.mkDerivation (finalAttrs: {
 
   makeFlags = [
     "DESTDIR=${placeholder "out"}"
+    "PREFIX="
   ];
 
   # populate version info used by `syshud -v`:
@@ -57,7 +58,10 @@ stdenv.mkDerivation (finalAttrs: {
   '';
 
   passthru.updateScript = nix-update-script {
-    extraArgs = [ "--version" "branch" ];
+    extraArgs = [
+      "--version"
+      "branch"
+    ];
   };
 
   meta = {

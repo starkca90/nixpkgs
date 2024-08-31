@@ -6,24 +6,25 @@
   nodejs,
   pnpm_9,
   autoPatchelfHook,
+  cacert,
   llvmPackages,
   musl,
   xorg,
 }:
 stdenv.mkDerivation (finalAttrs: {
   pname = "wrangler";
-  version = "3.66.0";
+  version = "3.72.1";
 
   src = fetchFromGitHub {
     owner = "cloudflare";
     repo = "workers-sdk";
     rev = "wrangler@${finalAttrs.version}";
-    hash = "sha256-YY+wp9rmXDWeSvdMC6FQyuDf8XP3GhHeHuFe9q0uNng=";
+    hash = "sha256-LidJr+sYXArsnHGjR0akFm557SIHP6gzErifYkZqsRk=";
   };
 
   pnpmDeps = pnpm_9.fetchDeps {
     inherit (finalAttrs) pname version src;
-    hash = "sha256-BjSpgkDYafnDb0SBdL3B6IYWT4EOqCAxdDm+Ev6QIgw=";
+    hash = "sha256-USMDUz+qId6aSoCNxmzPMi3YCiakZ9jyLjEhujhVD8I=";
   };
 
   buildInputs = [
@@ -70,7 +71,8 @@ stdenv.mkDerivation (finalAttrs: {
     makeWrapper ${lib.getExe nodejs} $out/bin/wrangler \
       --inherit-argv0 \
       --prefix-each NODE_PATH : "$${NODE_PATH_ARRAY[@]}" \
-      --add-flags $out/lib/packages/wrangler/bin/wrangler.js
+      --add-flags $out/lib/packages/wrangler/bin/wrangler.js \
+      --set-default SSL_CERT_FILE "${cacert}/etc/ssl/certs/ca-bundle.crt" # https://github.com/cloudflare/workers-sdk/issues/3264
     runHook postInstall
   '';
 
