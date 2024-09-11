@@ -77,13 +77,13 @@ let
 in
 stdenv.mkDerivation {
   pname = "ansel";
-  version = "0-unstable-2024-07-09";
+  version = "0-unstable-2024-08-13";
 
   src = fetchFromGitHub {
     owner = "aurelienpierreeng";
     repo = "ansel";
-    rev = "55761cfc7a6aacdc483dadacbf3fadcd89108e27";
-    hash = "sha256-5L/d5R2qQ/GFrJcDPKdqhhMQwEg050CmmDh3BLmETRQ=";
+    rev = "85f2b8b15fe2081634c6f2c3f96b5d430e045bf0";
+    hash = "sha256-w2DziVBoCy1NpH4AoIFmKdjqufopqUeYjAwqkOhxHBc=";
     fetchSubmodules = true;
   };
 
@@ -169,6 +169,11 @@ stdenv.mkDerivation {
     # Tags inherited from Darktable, + a "nightly" 0.0.0 tag that new artefacts get attached to
     hardcodeZeroVersion = true;
   };
+
+  # cmake can't find the binary itself
+  cmakeFlags = [
+    (lib.cmakeFeature "Xsltproc_BIN" (lib.getExe' libxslt "xsltproc"))
+  ];
 
   meta = {
     description = "Darktable fork minus the bloat plus some design vision";
